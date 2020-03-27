@@ -1,5 +1,5 @@
 use crate::utils::swap_from_str;
-use bswp::Swap;
+use bswp::pattern::{Pattern, Predicate};
 use std::fs::{File, OpenOptions};
 use std::io::{stdin, stdout, BufReader};
 
@@ -11,7 +11,7 @@ fn main() -> anyhow::Result<()> {
     let values = matches
         .values_of("pattern")
         .expect("at least a pattern should be provided"); // should not happen thanks to clap
-    let mut swaps: Vec<Swap> = vec![];
+    let mut swaps: Vec<(Pattern, Predicate)> = vec![];
     for value in values {
         let swap = swap_from_str(value)?;
         swaps.push(swap);

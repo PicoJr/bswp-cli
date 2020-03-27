@@ -1,9 +1,8 @@
 use anyhow::Result;
-use bswp::pattern::{BytePattern, Locality};
-use bswp::Swap;
+use bswp::pattern::{Pattern, Predicate};
 use std::convert::TryFrom;
 
-pub fn swap_from_str(s: &str) -> Result<Swap> {
+pub fn swap_from_str(s: &str) -> Result<(Pattern, Predicate)> {
     let separator = ',';
     let sp = s.splitn(4, |e| e == separator);
     let sp: Vec<&str> = sp.collect();
@@ -14,8 +13,10 @@ pub fn swap_from_str(s: &str) -> Result<Swap> {
             let periodicity: usize = periodicity.parse()?;
             let offset: usize = offset.parse()?;
             Ok((
-                BytePattern::new(value, mask),
-                Locality::new(periodicity, offset),
+                Pattern::new(value).with_mask(mask),
+                Predicate::new()
+                    .with_periodicity(periodicity)
+                    .with_offset(offset),
             ))
         }
         _ => Err(anyhow::anyhow!(
@@ -40,6 +41,11 @@ mod tests {
         let valid = "0x42,0xFF,2,1";
         let swap = swap_from_str(valid);
         assert!(swap.is_ok());
+        let (pattern, predicate) = swap.unwrap();
+        assert_eq!(pattern.value, 0x42);
+        assert_eq!(pattern.mask, 0xFF);
+        assert_eq!(predicate.periodicity, 2);
+        assert_eq!(predicate.offset, 1);
     }
 
     #[test]
@@ -51,22 +57,22 @@ mod tests {
 
     #[test]
     fn test_parse_hexa_byte_invalid_format() {
-        let valid = "0xG42";
-        let parsed = parse_hexa_byte(valid);
+        let invalid = "0xG42";
+        let parsed = parse_hexa_byte(invalid);
         assert!(parsed.is_err());
     }
 
     #[test]
     fn test_parse_hexa_byte_invalid_bound() {
-        let valid = "0xFFFF";
-        let parsed = parse_hexa_byte(valid);
+        let invalid = "0xFFFF";
+        let parsed = parse_hexa_byte(invalid);
         assert!(parsed.is_err());
     }
 
     #[test]
     fn test_parse_hexa_byte_invalid_base10() {
-        let valid = "255";
-        let parsed = parse_hexa_byte(valid);
+        let invalid = "255";
+        let parsed = parse_hexa_byte(invalid);
         assert!(parsed.is_err());
     }
 }

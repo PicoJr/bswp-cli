@@ -47,9 +47,9 @@ checksum = "cf1de2fe8c75bc145a2f577add951f8134889b4795d47466a54a5c846d691693"
 
 [[package]]
 name = "bswp"
-version = "0.1.0"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "760ec2f1d92baeaaf62a0f1681e929eb4a3335996dc1073842efcb8106b74c30"
+checksum = "3b92b873f00200c44cd976c6c7fd33e5aa186ff4651a0ba74ee3a3907bcea1ab"
 
 [[package]]
 name = "bswp-cli"
