@@ -57,6 +57,20 @@ cd bswp-cli
 cargo build --release
 ```
 
+## Performances
+
+```text
+yes | head -c 100MiB | ./target/release/bswp-cli -e 0x6e,0xFF,2,1 | pv > /dev/null
+ 100MiB 0:00:00 [ 147MiB/s] [   <=>
+```
+
+| pattern(s) | throughput |
+|:----------:|-----------:|
+| 1          | ~150MiB/s  |
+| 2          | ~75MiB/s   |
+| 3          | ~50MiB/s   |
+| 4          | ~40MiB/s   |
+
 ## Changelog
 
 Please see the [CHANGELOG](CHANGELOG.md) for a release history.
